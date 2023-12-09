@@ -248,7 +248,7 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
 <br>
 
 **Mybatis Query**
-```
+```java
 <select id="searchProductsWithMinPriceAndMaxPrice" resultMap="productsWithMinPriceAndMaxPriceMap" >
     select
         pmt.product_mst_id,
@@ -648,37 +648,82 @@ public ProductMst selectProductByProductMstId(int productMstId);
 
 <br>
 
+**Mybatis ResultMap**
+```java
+<resultMap id="productMstMap" type="com.woofnmeow.wnm_project_back.entity.ProductMst">
+    <id property="productMstId" column="product_mst_id" />
+    <result property="productName" column="product_name" />
+    <result property="petTypeId" column="pet_type_id" />
+    <result property="productCategoryId" column="product_category_id" />
+    <result property="productDetailText" column="product_detail_text" />
+    <result property="productThumbnailUrl" column="product_thumbnail_url" />
+    <result property="productDetailUrl" column="product_detail_url" />
+    <result property="createDate" column="create_date" />
+    <association property="petType" resultMap="petTypeMap"/>
+    <association property="category" resultMap="categoryMap"/>
+    <collection property="productDtlList" javaType="list" resultMap="productDtlMap"/>
+</resultMap>
+
+<resultMap id="productDtlMap" type="com.woofnmeow.wnm_project_back.entity.ProductDtl">
+    <id property="productDtlId" column="product_dtl_id" />
+    <result property="productMstId" column="product_mst_id" />
+    <result property="price" column="price" />
+    <result property="sizeId" column="size_id" />
+    <result property="actualStock" column="actual_stock" />
+    <result property="tempStock" column="temp_stock" />
+    <association property="size" resultMap="sizeMap" />
+</resultMap>
+
+<resultMap id="sizeMap" type="com.woofnmeow.wnm_project_back.entity.Size">
+    <id property="sizeId" column="size_id"/>
+    <result property="sizeName" column="size_name"/>
+</resultMap>
+
+<resultMap id="petTypeMap" type="com.woofnmeow.wnm_project_back.entity.PetType">
+    <id property="petTypeId" column="pet_type_id"/>
+    <result property="petTypeName" column="pet_type_name"/>
+</resultMap>
+
+<resultMap id="categoryMap" type="com.woofnmeow.wnm_project_back.entity.Category">
+    <id property="productCategoryId" column="product_category_id"/>
+    <result property="productCategoryName" column="product_category_name"/>
+</resultMap>
+```
+
+<br>
+
 **Mybatis Query**
 ```java
-    <select id="selectProductByProductMstId" resultMap="productMstMap">
-        select
-            pdt.product_dtl_id,
-            pmt.product_mst_id,
-            pmt.product_name,
-            pdt.price,
-            ptt.pet_type_id,
-            ptt.pet_type_name,
-            pct.product_category_id,
-            pct.product_category_name,
-            st.size_id,
-            st.size_name,
-            pmt.product_detail_text,
-            pmt.product_thumbnail_url,
-            pmt.product_detail_url,
-            psv.actual_stock,
-            psv.temp_stock,
-            pmt.create_date
-        from
-            product_mst_tb pmt
-            left outer join  product_dtl_tb pdt on(pdt.product_mst_id = pmt.product_mst_id)
-            left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
-            left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
-            left outer join size_tb st on(st.size_id = pdt.size_id)
-            left outer join product_stock_view psv on(psv.product_dtl_id = pdt.product_dtl_id)
-        where
-            pmt.product_mst_id = #{productMstId}
-    </select>
+<select id="selectProductByProductMstId" resultMap="productMstMap">
+    select
+        pdt.product_dtl_id,
+        pmt.product_mst_id,
+        pmt.product_name,
+        pdt.price,
+        ptt.pet_type_id,
+        ptt.pet_type_name,
+        pct.product_category_id,
+        pct.product_category_name,
+        st.size_id,
+        st.size_name,
+        pmt.product_detail_text,
+        pmt.product_thumbnail_url,
+        pmt.product_detail_url,
+        psv.actual_stock,
+        psv.temp_stock,
+        pmt.create_date
+    from
+        product_mst_tb pmt
+        left outer join  product_dtl_tb pdt on(pdt.product_mst_id = pmt.product_mst_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join size_tb st on(st.size_id = pdt.size_id)
+        left outer join product_stock_view psv on(psv.product_dtl_id = pdt.product_dtl_id)
+    where
+        pmt.product_mst_id = #{productMstId}
+</select>
 ```
+- resultMap collection을 이용하여 productMst 객체 하위에 productDtl이 복수의 List로 응답 가능하도록 코드 작성
 
 <br>
 
