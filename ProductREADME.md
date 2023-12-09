@@ -392,6 +392,31 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
   <div markdown="1">
     
 ## Front-End 코드
+
+```javascript
+const { productId } = useParams();
+
+const getProduct = useQuery(["getProduct"], async () => {
+    try {
+        const response = getProductMstApi(productId);
+        return await response
+        
+    } catch(error) {
+        console.log(error)
+    }
+}, {
+    refetchOnWindowFocus: false,
+    onSuccess: response => {
+        setProduct(response.data)
+    }
+})
+```
+- 상품 목록 페이지에서 상품을 클릭 시, params로 상품Id를 받아서 해당 상품에 상세정보를 조회하도록 요청 전송
+
+<br>
+
+
+
   </div>
   </details>
   
