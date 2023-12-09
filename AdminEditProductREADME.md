@@ -673,12 +673,118 @@ public boolean removeProduct(int productMstId) {
 
 **Repository**
 ```java
+public List<GetProductVo> searchProductsWithAllSizes(SearchMasterProductVo searchMasterProductVo);
+public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterProductVo);
+public Integer deleteProduct(int productMstId);
 ```
    <br>
 
 **Mybatis Query**
 ```java
+<select id="searchProductsWithAllSizes" resultMap="productsWithAllSizesMap">
+    select
+        pmt.product_mst_id,
+        pmt.product_name,
+        ptt.pet_type_id,
+        ptt.pet_type_name,
+        pct.product_category_id,
+        pct.product_category_name,
+        pmt.product_thumbnail_url,
+        pmt.product_detail_text,
+        pmt.product_detail_url,
+        pmt.create_date,
+        GROUP_CONCAT(CONCAT('(', st.size_name, '/ ', pdt.price, ')') SEPARATOR ', ') AS sizes_and_prices
+    from
+        product_mst_tb pmt
+        left outer join product_dtl_tb pdt on(pdt.product_mst_id = pmt.product_mst_id)
+        left outer join size_tb st on(st.size_id = pdt.size_id)
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+    where
+        1 = 1
+    <choose>
+        <when test="searchOption.equals('number')">
+            <if test="!searchValue.equals('')">
+                and pmt.product_mst_id = #{searchValue}
+            </if>
+        </when>
+        <when test="searchOption.equals('name')">
+            and pmt.product_name like concat("%", #{searchValue}, "%")
+        </when>
+        <otherwise>
+            and (pmt.product_name like concat("%", #{searchValue}, "%")
+            or pct.product_category_name like concat("%", #{searchValue}, "%")
+            or ptt.pet_type_name like concat("%", #{searchValue}, "%"))
+        </otherwise>
+    </choose>
+    <if test="!petTypeName.equals('all')">
+        and ptt.pet_type_name_eng = #{petTypeName}
+    </if>
+    <if test="!productCategoryName.equals('all')">
+        and pct.product_category_name_eng = #{productCategoryName}
+    </if>
+    group by
+        pmt.product_mst_id
+    order by
+    <choose>
+        <when test="sortOption.equals('name')">
+            pmt.product_name COLLATE utf8mb4_unicode_ci
+        </when>
+        <when test="sortOption.equals('number')">
+            pmt.product_mst_id desc
+        </when>
+        <otherwise>
+            pmt.product_mst_id desc
+        </otherwise>
+    </choose>
+    limit
+    #{pageIndex}, #{limit}
+</select>
+
+
+<select id="selectCountOfSearchedProducts" parameterType="com.woofnmeow.wnm_project_back.vo.SearchMasterProductVo" resultType="java.lang.Integer">
+    select
+        count(*)
+    from
+        product_mst_tb pmt
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+    where
+        1 = 1
+    <choose>
+        <when test="searchOption.equals('number')">
+            <if test="!searchValue.equals('')">
+                and pmt.product_mst_id = #{searchValue}
+            </if>
+        </when>
+        <when test="searchOption.equals('name')">
+            and pmt.product_name like concat("%", #{searchValue}, "%")
+        </when>
+        <otherwise>
+            and (pmt.product_name like concat("%", #{searchValue}, "%")
+            or pct.product_category_name like concat("%", #{searchValue}, "%")
+            or ptt.pet_type_name like concat("%", #{searchValue}, "%"))
+        </otherwise>
+    </choose>
+    <if test="!petTypeName.equals('all')">
+        and ptt.pet_type_name_eng = #{petTypeName}
+    </if>
+    <if test="!productCategoryName.equals('all')">
+        and pct.product_category_name_eng = #{productCategoryName}
+    </if>
+</select>
+
+
+<delete id="deleteProduct">
+    delete
+    from
+    product_mst_tb
+    where
+    product_mst_id = #{productMstId}
+</delete>
 ```
+- 다수의 사이즈를 하나의 객체에 담아오기 위해 GROUP_CONCAT을 사용하여 "(key/ value), (key/ value)"형태의 문자열로 select 하였다. <br>해당 문자열은 Service에서 가공하여 일반적인 Body형태로 변환하여 응답한다.
+
    <br>
 
   </div>
