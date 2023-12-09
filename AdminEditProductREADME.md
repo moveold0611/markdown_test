@@ -920,7 +920,7 @@ public Integer deleteProduct(int productMstId);
   <summary>객체</summary>
   <div markdown="1">
 
-   ## 정보를 받아오는 객체는 관리자 상품 관리 목록 페이지와 동일하게 사용한다.
+   ### 정보를 받아오는 객체는 관리자 상품 관리 목록 페이지와 동일하게 사용한다.
 
 <br>
    
