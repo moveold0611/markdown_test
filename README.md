@@ -53,6 +53,5 @@ __굵음2__
 
 # 이미지
 
-![Alt text](C:/imgs/test_img.gif)
-![Alt text](C:/imgs/test_img.gif "Optional title")
+![Alt text](~/imgs/test_img_2.jpg "Optional title")
 
