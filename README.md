@@ -30,7 +30,14 @@ markdown_test_sub_title
 ***    
 
 ### **여닫이 목록**
-   내용
+  <details>
+  <summary>여닫이 목록</summary>
+  <div markdown="1">
+  내용
+  </div>
+  </details>
+  
+<br/>
 
 
 ***   
