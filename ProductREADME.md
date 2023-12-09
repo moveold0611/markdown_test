@@ -382,7 +382,27 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
   <summary>객체</summary>
   <div markdown="1">
     
-## Dto, Entity
+## Dto
+
+## ResponseDto
+```java
+public class GetProductRespDto {
+    private String productName;
+    private String productDetailText;
+    private String productThumbnailUrl;
+    private String productDetailUrl;
+    private int petTypeId;
+    private String petTypeName;
+    private int productCategoryId;
+    private String productCategoryName;
+    private String createDate;
+
+    private List<ProductDtl> productDtlList;
+}
+```
+- 상품에 대한 이름, 설명, 사진 등은 상위 객체에 담겨있고, 각 사이즈별 가격과 재고는 productDtlList에 담아서 응답
+
+<br>
   </div>
   </details>
   
@@ -390,7 +410,7 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
   <details>
   <summary>Front-End</summary>
   <div markdown="1">
-    
+
 ## Front-End 코드
 
 ### 요청 전송
