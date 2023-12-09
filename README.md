@@ -72,7 +72,7 @@ public class TestMarkdownClass {
 ```javascript
 function tester() {
     const testMarkdown = () => {
-        console.log("리액트 문법 테스트");
+        console.log("JS 문법 테스트");
     }
 }
 ```
