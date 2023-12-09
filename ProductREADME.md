@@ -161,9 +161,12 @@ public ResponseEntity<?> getCountOfSearchedProducts(SearchMasterProductReqDto se
   </details>
   
 <br/>
+
 ***    
+
 구매 확인 페이지
 ---------------
+
   <details>
   <summary>객체</summary>
   <div markdown="1">
