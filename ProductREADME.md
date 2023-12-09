@@ -202,11 +202,15 @@ public int getCountOfSearchedProducts(SearchMasterProductReqDto searchMasterProd
 }
 ```
 
+<br>
+
 **Repository**
 ```java
 public List<GetAllProductsVo> searchProductsWithMinPriceAndMaxPrice(SearchMasterProductVo searchMasterProductVo);
 public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterProductVo);
 ```
+
+<br>
 
 **Mybatis Query**
 ```
@@ -323,6 +327,8 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
     </if>
 </select>
 ```
+
+<br>
 
   </div>
   </details>
