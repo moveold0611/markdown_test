@@ -1316,9 +1316,66 @@ public Integer updateProductDtl(int productMstId, int sizeId, int price);
   <summary>객체</summary>
   <div markdown="1">
    
-**Dto**
+**ResponseDto**
 ```java
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductMst {
+    private int productMstId;
+    private String productName;
+    private int petTypeId;
+    private int productCategoryId;
+    private String productDetailText;
+    private String productThumbnailUrl;
+    private String productDetailUrl;
+    private LocalDateTime createDate;
+
+    private PetType petType;
+    private Category category;
+    private List<ProductDtl> productDtlList;
+}
+
+@Data
+public class PetType {
+    private int petTypeId;
+    private String petTypeName;
+}
+
+@Data
+public class Category {
+    private int productCategoryId;
+    private String productCategoryName;
+}
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductDtl {
+    private int productDtlId;
+    private int productMstId;
+    private int price;
+    private int sizeId;
+    private int actualStock;
+    private int tempStock;
+
+    private Size size;
+    private ProductMst productMst; // 빈 데이터로 전송된다.
+}
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+public class Size {
+    private int sizeId;
+    private String sizeName;
+}
 ```
+
    <br>
    
   </div>
@@ -1333,13 +1390,123 @@ public Integer updateProductDtl(int productMstId, int sizeId, int price);
    
 **요청 코드**
 ```javascript
+const param = useParams()
+const productMstId = parseInt(param.productMstId)
+
+const getProduct = useQuery(["getProduct"], () => {
+    return getProductMstApi(productMstId);
+},{
+    refetchOnWindowFocus: false,
+    retry: 0
+})
 ```
+- params에 있는 Id를 사용하여 요청을 전송한다.
 
 <br>
 
 **화면 출력 코드**
 ```javascript
+return (
+    <Mypage>
+        <div css={S.SContainer}>
+            <div css={S.STopTitle}>
+                <h2>상품 상세 정보</h2>
+            </div>
+            <div css={S.SSubTitleBox}>
+                <h3>상품 정보</h3>
+                <button onClick={handleReturnToEditPageClick}>전체 상품 리스트</button>
+            </div>
+            <div css={S.STableBox}>
+                <table css={S.SToptable}>
+                    <tbody>
+                    <tr css={S.SThtdBox}>
+                        <th>상품 추가 일자</th>
+                        <td>{getProduct?.data?.data.createDate}</td>
+                    </tr>
+                    <tr css={S.SThtdBox}>
+                        <th>상품 이름</th>
+                        <td>{getProduct?.data?.data.productName}</td>
+                    </tr>
+                    <tr css={S.SThtdBox}>
+                        <th>상품 설명</th>
+                        <td>{getProduct?.data?.data.productDetailText}</td>
+                    </tr>
+                    <tr css={S.SThtdBox}>
+                        <th>동물 종류 이름[ID]</th>
+                        <td>{getProduct?.data?.data.petTypeName}[{getProduct?.data?.data.petTypeId}]</td>
+                    </tr>
+                    <tr css={S.SThtdBox}>
+                        <th>카테고리 이름[ID]</th>
+                        <td>{getProduct?.data?.data.productCategoryName}[{getProduct?.data?.data.productCategoryId}]</td>
+                    </tr>
+                    <tr css={S.SThtdBox}>
+                        <th>상품 마스터 ID</th>
+                        <td>{productMstId}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div css={S.SSubTitleBox}>
+                <h3>상품 사이즈별 정보</h3>
+            </div>
+            <div css={S.STableBox}>
+                {getProduct?.data?.data.productDtlList?.map(dtl => {
+                return <table key={dtl.productDtlId} css={S.SBottomTable}>
+                    <tbody>
+                        <tr css={S.SThtdBox}>
+                            <th>상품 상세(사이즈별) ID</th>
+                            <td>{dtl.productDtlId}</td>
+                        </tr>
+                        <tr css={S.SThtdBox}>
+                            <th>가격</th>
+                            <td>{dtl.price}</td>
+                        </tr>
+                        <tr css={S.SThtdBox}>
+                            <th>사이즈[사이즈ID]</th>
+                            <td>{dtl.size.sizeName}[{dtl.sizeId}]</td>
+                        </tr>
+                        <tr css={S.SThtdBox}>
+                            <th>실제 재고</th>
+                            <td>{dtl.actualStock}</td>
+                        </tr>
+                        <tr css={S.SThtdBox}>
+                            <th>임시 재고(실제 재고 - 주문재고)</th>
+                            <td>{dtl.tempStock}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                })}
+            </div>
+            <div css={S.SImgContainer}>
+                <div>
+                    <h2 css={S.SH2}>상품 메인 이미지</h2>
+                </div>
+                <div>
+                    <img src={getProduct?.data?.data.productThumbnailUrl} alt='' width={'700px'}/>
+                </div>
+                <div css={S.SMidBox}>
+                    <h3>상품 메인 이미지 URL</h3>
+                    <div>{getProduct?.data?.data.productThumbnailUrl}</div>
+                </div>
+                <div>
+                    <h2 css={S.SH2}>상품 상세 정보 이미지</h2>
+                </div>
+                <div>
+                    <img src={getProduct?.data?.data.productDetailUrl} alt='' width={'700px'}/>
+                </div>
+                <div css={S.SMidBox}>
+                    <h3>상품 상세 정보 이미지 URL</h3>
+                    <div>{getProduct?.data?.data.productDetailUrl}</div>
+                </div>
+                <button css={S.SButton} onClick={handleReturnToEditPageClick}>전체 상품 리스트</button>
+            </div>
+
+        </div>
+    </Mypage>
+);
 ```
+- 관리자가 상품에 대한 모든 정보를 확인하는 페이지이므로 카테고리 ID와 같은 상세한 정보까지 모두 화면에 출력한다.
 
 <br>
    
@@ -1354,22 +1521,108 @@ public Integer updateProductDtl(int productMstId, int sizeId, int price);
 
 **Controller**
 ```java
+@GetMapping("/api/product/master/{productMstId}")
+public ResponseEntity<?> getProductByProductMstId(@PathVariable int productMstId) {
+    return ResponseEntity.ok().body(productService.getProductByProductMstId(productMstId));
+}
 ```
    <br>
 
 **Service**
 ```java
+public GetProductRespDto getProductByProductMstId(int productMstId) {
+    try {
+        return productMapper.selectProductByProductMstId(productMstId).toProductRespDto();
+    }catch (Exception e) {
+        throw new ProductException(errorMapper.errorMapper
+                ("상품 오류", "상품 정보 조회 중 오류가 발생하였습니다."));
+    }
+}
 ```
    <br>
 
 **Repository**
 ```java
+public ProductMst selectProductByProductMstId(int productMstId);
 ```
    <br>
 
 **Mybatis Query**
 ```java
+<resultMap id="productMstMap" type="com.woofnmeow.wnm_project_back.entity.ProductMst">
+    <id property="productMstId" column="product_mst_id" />
+    <result property="productName" column="product_name" />
+    <result property="petTypeId" column="pet_type_id" />
+    <result property="productCategoryId" column="product_category_id" />
+    <result property="productDetailText" column="product_detail_text" />
+    <result property="productThumbnailUrl" column="product_thumbnail_url" />
+    <result property="productDetailUrl" column="product_detail_url" />
+    <result property="createDate" column="create_date" />
+    <association property="petType" resultMap="petTypeMap"/>
+    <association property="category" resultMap="categoryMap"/>
+    <collection property="productDtlList" javaType="list" resultMap="productDtlMap"/>
+</resultMap>
+
+<resultMap id="productDtlMap" type="com.woofnmeow.wnm_project_back.entity.ProductDtl">
+    <id property="productDtlId" column="product_dtl_id" />
+    <result property="productMstId" column="product_mst_id" />
+    <result property="price" column="price" />
+    <result property="sizeId" column="size_id" />
+    <result property="actualStock" column="actual_stock" />
+    <result property="tempStock" column="temp_stock" />
+    <association property="size" resultMap="sizeMap" />
+</resultMap>
+
+<resultMap id="sizeMap" type="com.woofnmeow.wnm_project_back.entity.Size">
+    <id property="sizeId" column="size_id"/>
+    <result property="sizeName" column="size_name"/>
+</resultMap>
+
+<resultMap id="petTypeMap" type="com.woofnmeow.wnm_project_back.entity.PetType">
+    <id property="petTypeId" column="pet_type_id"/>
+    <result property="petTypeName" column="pet_type_name"/>
+</resultMap>
+
+<resultMap id="categoryMap" type="com.woofnmeow.wnm_project_back.entity.Category">
+    <id property="productCategoryId" column="product_category_id"/>
+    <result property="productCategoryName" column="product_category_name"/>
+</resultMap>
 ```
+
+   <br>
+
+**Mybatis Query**
+```java
+<select id="selectProductByProductMstId" resultMap="productMstMap">
+    select
+        pdt.product_dtl_id,
+        pmt.product_mst_id,
+        pmt.product_name,
+        pdt.price,
+        ptt.pet_type_id,
+        ptt.pet_type_name,
+        pct.product_category_id,
+        pct.product_category_name,
+        st.size_id,
+        st.size_name,
+        pmt.product_detail_text,
+        pmt.product_thumbnail_url,
+        pmt.product_detail_url,
+        psv.actual_stock,
+        psv.temp_stock,
+        pmt.create_date
+    from
+        product_mst_tb pmt
+        left outer join  product_dtl_tb pdt on(pdt.product_mst_id = pmt.product_mst_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join size_tb st on(st.size_id = pdt.size_id)
+        left outer join product_stock_view psv on(psv.product_dtl_id = pdt.product_dtl_id)
+    where
+        pmt.product_mst_id = #{productMstId}
+</select>
+```
+
    <br>
 
   </div>
