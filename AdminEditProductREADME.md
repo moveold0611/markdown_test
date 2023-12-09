@@ -1,57 +1,211 @@
-markdown_test
-=============
+관리자 상품 관리 페이지
+=======================
 
-markdown_test_sub_title
-------------------------
+관리자 상품 관리 목록 페이지
+----------------------------
 
-# 헤더
-> 블럭1
->  > 블럭2
->  >  > 블럭3
+  <details>
+  <summary>객체</summary>
+  <div markdown="1">
+   
+**Dto**
+```java
+```
+   <br>
+   
+  </div>
+  </details>
+<br/>
+
+
+
+  <details>
+  <summary>Front-End</summary>
+  <div markdown="1">
+   
+**요청 코드**
+```javascript
+```
+
+<br>
+
+**화면 출력 코드**
+```javascript
+```
+
+<br>
+   
+  </div>
+  </details>
+<br/>
+
+
+  <details>
+  <summary>Back-End</summary>
+  <div markdown="1">
+
+**Controller**
+```java
+```
+   <br>
+
+**Service**
+```java
+```
+   <br>
+
+**Repository**
+```java
+```
+   <br>
+
+**Mybatis Query**
+```java
+```
+   <br>
+
+  </div>
+  </details>
+<br/>
 
 ***
 
-# 목록
-1. 1번 목록
-2. 2번 목록
-3. 3번 목록
+
+관리자 상품 수정 페이지
+-----------------------
+
+  <details>
+  <summary>객체</summary>
+  <div markdown="1">
+   
+**Dto**
+```java
+```
+   <br>
+   
+  </div>
+  </details>
+<br/>
+
+
+
+  <details>
+  <summary>Front-End</summary>
+  <div markdown="1">
+   
+**요청 코드**
+```javascript
+```
+
+<br>
+
+**화면 출력 코드**
+```javascript
+```
+
+<br>
+   
+  </div>
+  </details>
+<br/>
+
+
+  <details>
+  <summary>Back-End</summary>
+  <div markdown="1">
+
+**Controller**
+```java
+```
+   <br>
+
+**Service**
+```java
+```
+   <br>
+
+**Repository**
+```java
+```
+   <br>
+
+**Mybatis Query**
+```java
+```
+   <br>
+
+  </div>
+  </details>
+<br/>
+
 
 ***
 
-# 기호 목록
-* 별1
-  * 별2
-    * 별3
 
-+ 더하기1
-  + 더하기2
-    + 더하기3
+관리자 상품 상세 정보 조회 페이지
+---------------------------------
 
-- 빼기1
-  - 빼기2
-    - 빼기3
+  <details>
+  <summary>객체</summary>
+  <div markdown="1">
+   
+**Dto**
+```java
+```
+   <br>
+   
+  </div>
+  </details>
+<br/>
 
-***
 
-# 링크
 
-Link: [Google][googlelink]
+  <details>
+  <summary>Front-End</summary>
+  <div markdown="1">
+   
+**요청 코드**
+```javascript
+```
 
-[googlelink]: https://google.com "Go google"
+<br>
 
-***
+**화면 출력 코드**
+```javascript
+```
 
-# 강조
+<br>
+   
+  </div>
+  </details>
+<br/>
 
-*강조*
-_강조2_
-**굵음**
-__굵음2__
-~~취소선~~
 
-***
+  <details>
+  <summary>Back-End</summary>
+  <div markdown="1">
 
-# 이미지
+**Controller**
+```java
+```
+   <br>
 
-![Alt text](~/imgs/test_img_2.jpg "Optional title")
+**Service**
+```java
+```
+   <br>
+
+**Repository**
+```java
+```
+   <br>
+
+**Mybatis Query**
+```java
+```
+   <br>
+
+  </div>
+  </details>
+<br/>
 
