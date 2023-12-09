@@ -9,12 +9,15 @@
   <details>
   <summary>여닫이 기능</summary>
   <div markdown="1">
-  **Back-End 코드**
-    ```java
-      public ResponseEntity<?> searchProductsWithAllSizes(SearchMasterProductReqDto searchMasterProductReqDto) {
-          return ResponseEntity.ok().body(productService.searchProductsWithAllSizes(searchMasterProductReqDto));
-      } 
-    ```
+    
+**Back-End 코드**
+```java
+  public ResponseEntity<?> searchProductsWithAllSizes(SearchMasterProductReqDto searchMasterProductReqDto) {
+      return ResponseEntity.ok().body(productService.searchProductsWithAllSizes(searchMasterProductReqDto));
+  } 
+```
+
+
   </div>
   </details>
   
