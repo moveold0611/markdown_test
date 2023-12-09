@@ -69,7 +69,7 @@ public class TestMarkdownClass {
 }
 ```
 
-```react
+```javascript
 const testMarkdown = () => {
     console.log("리액트 문법 테스트");
 }
