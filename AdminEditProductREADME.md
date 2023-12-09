@@ -80,6 +80,7 @@ const handleProductSubmitClick = async () => {
 }   
 ```
 - 카테고리, 설명, 상품명, 이미지Url 등 필요한 정보를 Body에 담아서 전송한다.
+- 사이즈가 여러개 존재하는 카테고리 등록 시, 자동으로 모든 사이즈에 같은 가격이 입력된다. 이 가격은 상품 수정 페이지에서 수정 가능하다.
 
 <br>
 
@@ -157,7 +158,102 @@ const handleProductDetailImgChange = (e) => {
 
 **화면 출력 코드**
 ```javascript
+return (
+    <Mypage>
+        <div css={S.SContainer}>
+            <div css={S.STopTitle}>
+                <h2>상품 등록</h2>
+            </div>
+            <div css={S.SubContainer}>
+                <div>
+                    <h1 css={S.SH1}>상품 메인 이미지 등록</h1>
+                </div>
+                <div css={S.SImgBox} >
+                    <img src={productThumbnailUrlSrc} alt='상품 메인 이미지'/>
+                </div>
+                <div css={S.SButtonBox}>
+                    <input css={S.Sfile} type="file" onChange={handleProductThumnailImgChange} ref={productThumnailImgRef}/>
+                    <button onClick={handleProductThumnailImgUploadClick}>메인 이미지 수정 파일 업로드</button>
+                </div>
+                <div>
+                    <h1 css={S.SH1}>상품 상세 이미지 등록</h1>
+                </div>
+                <div css={S.SImgBox}>
+                    <img src={productDetailUrlSrc} alt='상품 상세 이미지'/>
+                </div>
+                <div css={S.SButtonBox}>
+                    <input css={S.Sfile} type="file" onChange={handleProductDetailImgChange} ref={productDetailImgRef}/>
+                    <button onClick={handleProductDetailImgUploadClick}>상품 상세 이미지 파일 업로드</button>
+                </div>
+                <div>
+                    <h1 css={S.SH1}>상품 정보 등록</h1>
+                </div>
+                <div css={S.SInputBox}>
+                    <div css={S.SInfoInput}>
+                        <h2>상품명</h2> 
+                        <input type="text" 
+                            name='productName'
+                            placeholder='상품명'
+                            onChange={handleInputChange}/>
+                    </div>
+                    <div css={S.SInfoInput}>
+                        <h2>상품 설명</h2>
+                        <textarea type="text" 
+                            name='productDetailText'
+                            placeholder='상품 설명'
+                            onChange={handleInputChange}/>
+                    </div>
+                    <div css={S.SInfoInput}>
+                        <h2>동물타입</h2> 
+                        <select 
+                            options={petTypes}
+                            onChange={handlePetTypeOptionChange}
+                            css={S.SSelect}>
+                            {petTypes.map(type => {
+                                return <option key={type.value} value={type.value} label={type.label}>{type.label}</option>
+                            })}
+                        </select>
+                    </div>
+                    {product.petTypeId === 1 ? 
+                        <div css={S.SInfoInput}>
+                            <h2>카테고리</h2>
+                            <select
+                                options={productDogCategoeies}
+                                onChange={handleCategoryTypeOptionChange}
+                                css={S.SSelect}>
+                                {productDogCategoeies.map(category => {
+                                    return <option key={category.value} value={category.value} label={category.label}>{category.label}</option>
+                                })}
+                            </select> 
+                        </div>
+                        :
+                        <div css={S.SInfoInput}>
+                            <h2>카테고리</h2>
+                            <select
+                                options={productCatCategoeies}
+                                onChange={handleCategoryTypeOptionChange}
+                                css={S.SSelect}>
+                                {productCatCategoeies.map(category => {
+                                    return <option key={category.value} value={category.value} label={category.label}>{category.label}</option>
+                                })}
+                            </select> 
+                        </div>
+                    }
+                    <div css={S.SInfoInput}>
+                        <h2>가격</h2>
+                        <input type="text" name='price' placeholder='가격' onChange={handleInputChange} />
+                        <h4>*사이즈별 가격 설정은 등록 후 수정 페이지에서 수정*</h4>
+                    </div>
+                </div>
+                <div>
+                    <button onClick={handleProductSubmitClick} css={S.SButton}>등록하기</button>
+                </div>
+            </div>
+        </div>
+    </Mypage>
+);
 ```
+- 이미지는 확인을 위해 useState상태를 이용하고 있고, 업로드 데이터가 변경 시 onChange를 이용하여 요청보낼 Body 객체 정보가 갱신된다.
 
 <br>
    
