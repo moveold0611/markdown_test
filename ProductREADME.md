@@ -363,8 +363,6 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
 </select>
 ```
 
-<br>
-
 - 상품의 기본 정보에 추가로 최소가격과 최대가격, 그리고 모든 재고의 총합을 응답 객체로 반환한다.<br>모든 재고의 총합이 0이하일 경우 front-end에서 품절로 출력하기 위해 사용한다.
 
 - 검색 조건에 일치하는 상품의 갯수도 pagenation기능을 위해 응답한다.
