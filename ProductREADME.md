@@ -584,7 +584,7 @@ const countOnChange = (target, index) => {
     setSelectedProducts([...updateSelectedPorudcts]);
 }
 ```
-- 정상적인 동작이 아닐 경우의 동작 처리<br>ex) 비로그인 구매, 상품 미선택 구매, 품절 상품 구매, 재고보다 많은 수량 구매
+- 정상적인 동작이 아닐 경우의 처리<br>ex) 비로그인 구매, 상품 미선택 구매, 품절 상품 구매, 재고보다 많은 수량 구매
 
 <br>
 
