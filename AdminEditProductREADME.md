@@ -268,12 +268,44 @@ return (
 
 **Controller**
 ```java
+@PostMapping("/api/admin/product")
+public ResponseEntity<?> addProduct(@RequestBody AddProductReqDto addProductReqDto) {
+    return ResponseEntity.ok().body(productService.addProduct(addProductReqDto));
+}
 ```
    <br>
 
 **Service**
 ```java
+@Transactional(rollbackFor = Exception.class)
+public boolean addProduct(AddProductReqDto addProductReqDto) {
+    try {
+        Map<String, Object> map = new HashMap<>();
+        ProductMst productMst = addProductReqDto.toEntity();
+        productMapper.addProductMaster(productMst);
+
+        map.put("productMstId", productMst.getProductMstId());
+        map.put("price", addProductReqDto.getPrice());
+
+        if(addProductReqDto.getProductCategoryId() == 4 && addProductReqDto.getPetTypeId() == 1) {
+            map.put("sizeId", 2);
+            for(int i = 0; i < 6; i++) {
+                productMapper.addProductDetail(map);
+                map.replace("sizeId", i + 3);
+            }
+        }else {
+            map.put("sizeId", 1);
+            productMapper.addProductDetail(map);
+        }
+        return true;
+    }catch (Exception e) {
+        throw new ProductException
+                (errorMapper.errorMapper("상품 오류", "상품 추가 중 오류가 발생하였습니다."));
+    }
+}
 ```
+- 상품의 카테고리 조건에 맞춰 자동으로 사이즈를 정해서 업로드하는 조건문이 들어있다.<br>사이즈 종류가 변경될 일이 없다고 판단되어 이와같이 코드를 작성하였다.
+- 변경이 필요하다면 front-end에서 List로 사이즈와 가격정보를 받아오는 방식으로 수정이 가능하다.
    <br>
 
 **Repository**
