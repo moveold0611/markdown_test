@@ -11,6 +11,9 @@
 
 ### 검색 요청 RequestDto
 ```java
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class SearchMasterProductReqDto {
     private String petTypeName;
     private String productCategoryName;
@@ -26,6 +29,8 @@ public class SearchMasterProductReqDto {
 
 ### 상품 데이터 ResponseDto
 ```java
+@Data
+@Builder
 public class GetAllProductsRespDto {
     private int productMstId;
     private String productName;
@@ -386,6 +391,8 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
 
 ## ResponseDto
 ```java
+@Data
+@Builder
 public class GetProductRespDto {
     private String productName;
     private String productDetailText;
