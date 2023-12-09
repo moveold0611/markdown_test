@@ -5,15 +5,21 @@
 
 상품 목록 페이지
 ---------------
+  <details>
+  <summary>객체</summary>
+  <div markdown="1">
+  
+
+  </div>
+  </details>
+  
+<br/>
+
 
   <details>
-  <summary>여닫이 기능</summary>
+  <summary>Back-End</summary>
   <div markdown="1">
 
-## 객체
-**Dto**
-
-<br>
     
 ## Back-End 코드
 
@@ -38,8 +44,8 @@ public ResponseEntity<?> getCountOfSearchedProducts(SearchMasterProductReqDto se
 
 
   <details>
-  <summary>여닫이 기능</summary>
-  <div markdown="2">
+  <summary>Front-End</summary>
+  <div markdown="1">
   
 
   </div>
