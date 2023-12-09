@@ -64,8 +64,14 @@ __굵음2__
 public class TestMarkdownClass {
   public static void main(String[] args) {
     int a = 0;
-    system.out.println("자바 문법 하이라이트");
+    system.out.println("자바 문법 테스트");
   }
+}
+```
+
+```react
+const testMarkdown = () => {
+    console.log("리액트 문법 테스트");
 }
 ```
 
