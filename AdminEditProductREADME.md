@@ -1214,21 +1214,90 @@ const handleUpdateSubmit = async () => {
 
 **Controller**
 ```java
+@PutMapping("/api/admin/product/{productMstId}")
+public ResponseEntity<?> editProduct(@PathVariable int productMstId, @RequestBody EditProductReqDto editProductReqDto) {
+    return ResponseEntity.ok().body(productService.editProduct(productMstId, editProductReqDto));
+}
 ```
+
    <br>
 
 **Service**
 ```java
+@Transactional(rollbackFor = Exception.class)
+public boolean editProduct(int productMstId, EditProductReqDto editProductReqDto) {
+    try {
+        Map<String, Object> mstReqMap = new HashMap<>();
+        mstReqMap.put("productMstId", productMstId);
+        mstReqMap.put("productName", editProductReqDto.getProductName());
+        mstReqMap.put("productDetailText", editProductReqDto.getProductDetailText());
+        mstReqMap.put("productThumbnailUrl", editProductReqDto.getProductThumbnailUrl());
+        mstReqMap.put("productDetailUrl", editProductReqDto.getProductDetailUrl());
+        productMapper.updateProductMst(mstReqMap);
+
+
+        if(editProductReqDto.getNo().equals("")) {
+            Map<String, Integer> dtlReqMap = new HashMap<>();
+            dtlReqMap.put("2", Integer.parseInt(editProductReqDto.getXS()));
+            dtlReqMap.put("3", Integer.parseInt(editProductReqDto.getS()));
+            dtlReqMap.put("4", Integer.parseInt(editProductReqDto.getM()));
+            dtlReqMap.put("5", Integer.parseInt(editProductReqDto.getL()));
+            dtlReqMap.put("6", Integer.parseInt(editProductReqDto.getXL()));
+            dtlReqMap.put("7", Integer.parseInt(editProductReqDto.getXXL()));
+
+            for (Map.Entry<String, Integer> entry : dtlReqMap.entrySet()) {
+                int sizeId = Integer.parseInt((String) entry.getKey());
+                Integer price = entry.getValue();
+                productMapper.updateProductDtl(productMstId, sizeId, price);
+            }
+        }else {
+            productMapper.updateProductDtl(productMstId, 1, Integer.parseInt(editProductReqDto.getNo()));
+        }
+        return true;
+    }catch (Exception e) {
+        throw new ProductException
+                (errorMapper.errorMapper("상품 오류", "상품 정보 수정 중 오류가 발생하였습니다."));
+    }
+}
 ```
+- 요청 Body에 비어있는 객체를 확인하여 사이즈가 있는 상품인지 없는 상품인지 구분하여 데이터를 업데이트한다.
+- 사이즈 Id를 직접 key에 입력해줘아햐는 한계가 있어 수정이 필요해보인다.
+
    <br>
 
 **Repository**
 ```java
+public Integer updateProductMst(Map<String, Object> map);
+public Integer updateProductDtl(int productMstId, int sizeId, int price);
 ```
+
    <br>
 
 **Mybatis Query**
 ```java
+<update id="updateProductMst" parameterType="hashmap">
+    update
+        product_mst_tb
+    set
+        product_name = #{productName},
+        product_detail_text = #{productDetailText},
+        product_thumbnail_url = #{productThumbnailUrl},
+        product_detail_url = #{productDetailUrl}
+    where
+        product_mst_id = #{productMstId}
+</update>
+
+
+
+<update id="updateProductDtl" parameterType="hashmap">
+    update
+        product_dtl_tb
+    set
+        price = #{price}
+    where
+        product_mst_id = #{productMstId}
+        and size_id = #{sizeId}
+</update>
 ```
    <br>
 
