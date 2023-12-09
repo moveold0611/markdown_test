@@ -7,7 +7,40 @@
   <summary>객체</summary>
   <div markdown="1">
     
-## Dto, Entity
+## Dto
+
+### 검색 요청 RequestDto
+```java
+public class SearchMasterProductReqDto {
+    private String petTypeName;
+    private String productCategoryName;
+    private String searchOption;
+    private String searchValue;
+    private String sortOption;
+    private int pageIndex;
+}
+```
+- 검색 조건에 해당하는 상품 정보를 받아오기 위한 요청 Dto
+
+<br>
+
+### 상품 데이터 ResponseDto
+```java
+public class GetAllProductsRespDto {
+    private int productMstId;
+    private String productName;
+    private String petTypeId;
+    private String productCategoryId;
+    private String productThumbnailUrl;
+    private String minPrice;
+    private String maxPrice;
+    private int tempStock;
+}
+```
+- front-end에서 사용하기 위한 상품 목록 데이터 Dto<br>기본적인 정보와 최소가격, 최대가격, 모든 재고의 총 합을 포함한 정보를 담고있다.
+
+<br>
+
   </div>
   </details>
   
@@ -15,7 +48,7 @@
   <details>
   <summary>Front-End</summary>
   <div markdown="1">
-    
+
 ## Front-End 코드
 ### 요청 코드
 ```javascript
@@ -75,7 +108,7 @@ const getProductsPagenation = useQuery(["getProductsPageNation"], async () => {
 })
 ```
 - 랜더링 시 요청에 검색 객체를 담아서 조건에 일치하는 상품 정보와 pagenation에 필요한 데이터를 받아온다.<br>그리고 페이지 변경 시 다른 검색 조건들과 충돌을 방지하기 위해 기존 검색 조건을 oldSearchData에 저장해 둔다.
-- 
+
 <br>
 
 ### 화면 출력 코드
@@ -139,7 +172,9 @@ return (
   </RootContainer>
 );
 ```
-- 
+- 검색 옵션을 변경하는 부분은 각 기능별로 onChange를 사용하여 searchData를 변경한다.
+- back-end에서 응답받은 데이터를 map을 사용하여 화면에 출력한다.
+
   </div>
   </details>
   
@@ -329,7 +364,10 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
 ```
 
 <br>
+- 상품의 기본 정보에 추가로 최소가격과 최대가격, 그리고 모든 재고의 총합을 응답 객체로 반환한다.<br>모든 재고의 총합이 0이하일 경우 front-end에서 품절로 출력하기 위해 사용한다.
+- 검색 조건에 일치하는 상품의 갯수도 pagenation기능을 위해 응답한다.
 
+<br>
   </div>
   </details>
   
