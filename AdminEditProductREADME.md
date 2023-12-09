@@ -919,12 +919,43 @@ public Integer deleteProduct(int productMstId);
   <details>
   <summary>객체</summary>
   <div markdown="1">
+
+   ## 정보를 받아오는 객체는 관리자 상품 관리 목록 페이지와 동일하게 사용한다.
+
+<br>
    
-**Dto**
+**RequsetDto**
 ```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class EditProductReqDto {
+    private String productName;
+    private String productDetailText;
+    private String productThumbnailUrl;
+    private String productDetailUrl;
+
+    // 사이즈별 가격
+    @JsonProperty("no")
+    private String no;
+    @JsonProperty("XS")
+    private String XS;
+    @JsonProperty("S")
+    private String S;
+    @JsonProperty("M")
+    private String M;
+    @JsonProperty("L")
+    private String L;
+    @JsonProperty("XL")
+    private String XL;
+    @JsonProperty("XXL")
+    private String XXL;
+}
 ```
+
+
    <br>
-   
+
   </div>
   </details>
 <br/>
