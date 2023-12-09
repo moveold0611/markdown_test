@@ -311,12 +311,32 @@ public boolean addProduct(AddProductReqDto addProductReqDto) {
 
 **Repository**
 ```java
+@Options(useGeneratedKeys = true, keyProperty = "productMstId")
+public Integer addProductMaster(ProductMst productMst);
+public Integer addProductDetail(Map<String, Object> map);
 ```
+- 정규화된 테이블에 모두 정보가 들어가야하기 때문에 상품명, 설명, 이미지 Url과 같은 통합 정보를 Master 테이블에 insert 후<br>useGeneratedKeys를 사용하여 받아온 key를 사용하여 사이즈와 가격 정보를 Detail 테이블에 insert한다.
+
    <br>
 
 **Mybatis Query**
 ```java
+<insert id="addProductMaster" parameterType="com.woofnmeow.wnm_project_back.entity.ProductMst" useGeneratedKeys="true" keyProperty="productMstId">
+    insert into
+        product_mst_tb
+    values(0, #{productName}, #{petTypeId}, #{productCategoryId}, #{productDetailText}, #{productThumbnailUrl}, #{productDetailUrl}, now())
+</insert>
+
+
+
+<insert id="addProductDetail" parameterType="hashmap">
+    insert into
+        product_dtl_tb
+    values(0, #{productMstId}, #{price}, #{sizeId})
+</insert>
 ```
+- useGeneratedKeys를 사용하여 insert에 사용된 entity객체에 productMstId값을 저장하고 addProductDetail에 사용한다.
+
    <br>
 
   </div>
