@@ -161,6 +161,169 @@ public ResponseEntity<?> getCountOfSearchedProducts(SearchMasterProductReqDto se
     return ResponseEntity.ok().body(productService.getCountOfSearchedProducts(searchMasterProductReqDto));
 }
 ```
+
+<br>
+
+**Service**
+```java
+public List<GetAllProductsRespDto> searchProductsWithMinPriceAndMaxPrice(SearchMasterProductReqDto searchMasterProductReqDto) {
+    try {
+        List<GetAllProductsVo> getAllProductsVo = productMapper.searchProductsWithMinPriceAndMaxPrice(searchMasterProductReqDto.toSearchProduct());
+        List<GetAllProductsRespDto> respDto = new ArrayList<>();
+        getAllProductsVo.forEach(vo -> {
+                    String allSizeAndPrice = vo.getSizeAndPrice();
+                    String[] sizeAndPrice = allSizeAndPrice.split(", ");
+                    List<String> priceList = new ArrayList<>();
+                    for(String price: sizeAndPrice) {
+                        priceList.add(price);
+                    }
+                    String minPrice = priceList.get(0).replace("/ ", ": ");
+                    String maxPrice = "";
+                    if (priceList.size() == 2) {
+                        maxPrice = priceList.get(1).replace("/ ", ": ");
+                    }
+                    respDto.add(vo.toRespDto(minPrice, maxPrice));
+                }
+        );
+        return respDto;
+    }catch (Exception e) {
+        throw new ProductException
+                (errorMapper.errorMapper("상품 오류", "상품 검색 중 오류가 발생하였습니다."));
+    }
+}
+
+public int getCountOfSearchedProducts(SearchMasterProductReqDto searchMasterProductReqDto) {
+    try {
+        return productMapper.selectCountOfSearchedProducts(searchMasterProductReqDto.toSearchProduct());
+    }catch (Exception e) {
+        throw new ProductException
+                (errorMapper.errorMapper("상품 오류", "상품 리스트를 불러오는 중 오류가 발생하였습니다."));
+    }
+}
+```
+
+**Repository**
+```java
+public List<GetAllProductsVo> searchProductsWithMinPriceAndMaxPrice(SearchMasterProductVo searchMasterProductVo);
+public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterProductVo);
+```
+
+**Mybatis Query**
+```
+<select id="searchProductsWithMinPriceAndMaxPrice" resultMap="productsWithMinPriceAndMaxPriceMap" >
+    select
+        pmt.product_mst_id,
+        pmt.product_name,
+        ptt.pet_type_id,
+        pct.product_category_id,
+        pmt.product_thumbnail_url,
+        GROUP_CONCAT(CONCAT('(', st.size_name, '/ ', pdt.price, ')') SEPARATOR ', ') AS sizes_and_prices,
+        (select
+            sum(temp_stock)
+        from
+            product_stock_view psv
+            left outer join product_dtl_tb pdt on(pdt.product_dtl_id = psv.product_dtl_id)
+            left outer join product_mst_tb subpmt on(subpmt.product_mst_id = pdt.product_mst_id)
+        where
+            subpmt.product_mst_id = pmt.product_mst_id
+        group by
+            pmt.product_mst_id) as temp_stock
+    from
+        product_mst_tb pmt
+        left outer join (select
+                            product_dtl_id,
+                            product_mst_id,
+                            row_number() over(partition by product_mst_id order by price) as num,
+                            row_number() over(partition by product_mst_id order by price desc) as num2,
+                            size_id,
+                            price
+                        from
+                            product_dtl_tb)
+        pdt on(pdt.product_mst_id = pmt.product_mst_id and (pdt.num = 1 or pdt.num2 = 1))
+        left outer join size_tb st on(st.size_id = pdt.size_id)
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+    where
+    1 = 1
+    <choose>
+        <when test="searchOption.equals('number')">
+            <if test="!searchValue.equals('')">
+                and pmt.product_mst_id = #{searchValue}
+            </if>
+        </when>
+        <when test="searchOption.equals('name')">
+            and pmt.product_name like concat("%", #{searchValue}, "%")
+        </when>
+        <otherwise>
+            and (pmt.product_name like concat("%", #{searchValue}, "%")
+            or pct.product_category_name like concat("%", #{searchValue}, "%")
+            or ptt.pet_type_name like concat("%", #{searchValue}, "%"))
+        </otherwise>
+    </choose>
+    <if test="!petTypeName.equals('all')">
+        and ptt.pet_type_name_eng = #{petTypeName}
+    </if>
+    <if test="!productCategoryName.equals('all')">
+        and pct.product_category_name_eng = #{productCategoryName}
+    </if>
+    group by
+        pmt.product_mst_id
+    order by
+    <choose>
+        <when test="sortOption.equals('name')">
+            pmt.product_name COLLATE utf8mb4_unicode_ci
+        </when>
+        <when test="sortOption.equals('number')">
+            pmt.product_mst_id desc
+        </when>
+        <when test="sortOption.equals('lowprice')">
+            pdt.price asc
+        </when>
+        <when test="sortOption.equals('highprice')">
+            pdt.price desc
+        </when>
+        <otherwise>
+            pmt.product_mst_id desc
+        </otherwise>
+    </choose>
+    limit
+    #{pageIndex}, #{limit}
+</select>
+
+
+<select id="selectCountOfSearchedProducts" parameterType="com.woofnmeow.wnm_project_back.vo.SearchMasterProductVo" resultType="java.lang.Integer">
+    select
+        count(*)
+    from
+        product_mst_tb pmt
+        left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+        left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+    where
+        1 = 1
+    <choose>
+        <when test="searchOption.equals('number')">
+            <if test="!searchValue.equals('')">
+                and pmt.product_mst_id = #{searchValue}
+            </if>
+        </when>
+        <when test="searchOption.equals('name')">
+            and pmt.product_name like concat("%", #{searchValue}, "%")
+        </when>
+        <otherwise>
+            and (pmt.product_name like concat("%", #{searchValue}, "%")
+            or pct.product_category_name like concat("%", #{searchValue}, "%")
+            or ptt.pet_type_name like concat("%", #{searchValue}, "%"))
+        </otherwise>
+    </choose>
+    <if test="!petTypeName.equals('all')">
+        and ptt.pet_type_name_eng = #{petTypeName}
+    </if>
+    <if test="!productCategoryName.equals('all')">
+        and pct.product_category_name_eng = #{productCategoryName}
+    </if>
+</select>
+```
+
   </div>
   </details>
   
