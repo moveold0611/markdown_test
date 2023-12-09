@@ -393,6 +393,7 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
     
 ## Front-End 코드
 
+### 요청 전송
 ```javascript
 const { productId } = useParams();
 
@@ -410,12 +411,182 @@ const getProduct = useQuery(["getProduct"], async () => {
         setProduct(response.data)
     }
 })
+
+const getReviewByProduct = useQuery(["getReviewByProduct"], async () => {
+    try {
+        const option = {
+            headers: {
+                Authorization: localStorage.getItem("accessToken")
+            }
+        }
+        const response = await getReviewByProductApi(productId, option);
+        return response;
+    } catch (error) {
+        console.log(error)
+    }
+}, {
+    refetchOnWindowFocus: false,
+    onSuccess: response => {
+        setProductReview(response?.data)
+    }
+})
 ```
-- 상품 목록 페이지에서 상품을 클릭 시, params로 상품Id를 받아서 해당 상품에 상세정보를 조회하도록 요청 전송
+- 상품 목록 페이지에서 상품을 클릭 시, params로 상품Id를 받아서 해당 상품에 상세정보(모든 사이즈의 가격과 재고를 포함)와 리뷰를 조회하도록 요청 전송
 
 <br>
 
+### 화면 출력
+```javascript
+return (
+    <RootContainer>
+        <div>
+          <div css={S.SLayout}>
+              <div css={S.STopContainer} >
+                  <div>
+                      <img css={S.SThumbnailImg} src={product.productThumbnailUrl} />
+                  </div>
+                  <div css={S.SOrderInfoBox}>
+                      <h2>{product.productName}</h2>
+                      <p dangerouslySetInnerHTML={{__html: product.productDetailText}}></p>
+                      <div css={S.SSelectBox}>
+                          <Select css={S.SSelect} onChange={selectOnChange} options={product.productDtlList?.map(pdt => {
+                              return {
+                                  value: pdt.productDtlId,
+                                  label: `${pdt.size.sizeName === "no" ? product.productName : pdt.size.sizeName}${pdt.tempStock > 0 ? "(수량: " + pdt.tempStock + ")" : "(품절)"}`};
+                          })
+                          }/>
+                      </div>
+                      <ul css={S.SOrderListBox}>
+                          {selectedProducts.map((selectedProduct, index) => 
+                              <li key={index}>
+                                  <div css={S.SListBox}>
+                                      <h5>
+                                          {product.productName}<br/>
+                                          -{selectedProduct.sizeName}
+                                      </h5>
+                                      <input type="number" defaultValue={1} min={1} max={99} onChange={(e) => countOnChange(e.target, index)}/>
+                                      <p>{selectedProduct.price.toLocaleString("ko-KR")}원</p>
+                                      <button onClick={() => handleDeleteProductOnClick(index)}>X</button>
+                                  </div>
+                              </li>
+                          )}
+                      </ul>
+                      <div css={S.SPriceInfo}>
+                          <p>Total</p>
+                          <h3>{selectedProducts.reduce((total, selectedProduct) => {
+                              return total += selectedProduct.price}, 0).toLocaleString("ko-KR")}원</h3>
+                      </div>
+                      <div css={S.SButtonBox}>
+                          <button onClick={buyNowOnClick}>BUY NOW</button>
+                          <button onClick={handleAddToCartOnClick}>ADD TO CART</button>
+                      </div>
+                  </div>
+              </div>
+              <div css={S.SDetailContainer}>
+                  <img css={S.SDDetailImg} src={product.productDetailUrl} alt="" />
+              </div>
+          </div>
+          <div css={S.SReviewContainer}>
+              <div css={S.SH1}>고객님들의 소중한 구매후기 ⭐</div>
+              <ul>
+                  {productReview.map(rev => {
+                      return <li>
+                          <div css={S.SReviewList}>
+                              <div css={S.SreviewHeader}>
+                                  <img src={rev.profileUrl} alt=""/>
+                                  <div css={S.SNickname}>{rev.nickname}</div>
+                                  <div css={S.SProductSizeBox}>
+                                      <div>{product.productName} / </div>
+                                      <div> size {rev.sizeName}</div>
+                                  </div>
+                                  <div css={S.SReivewDate}>{rev.reviewDate}</div>
+                              </div>
+                              <div css={S.SReviewContentBox}>
+                                  {!!rev.reviewImgUrl ? <div><img src={rev.reviewImgUrl} alt="" css={S.SReviewImg}/></div> : <div></div>}
+                                  <div css={S.SReviewContent}>{rev.reviewContent}</div>
+                              </div>
+                          </div>
+                      </li>
+                  })}
+              </ul>
+          </div>
+        </div>
+    </RootContainer>
+);
+```
+- 응답받은 객체의 사이즈별 가격과 재고를 확인하여 품절 혹은 가격을 출력하도록 조건 설정
+- 결제 절차를 진행하거나 장바구니에 담기 전 선택한 상품의 갯수를 추가하거나 여러 사이즈의 상품을 담을 수 있도록 코드가 작성되었다.
 
+<br>
+
+### 예외 상황 처리
+```javascript
+const buyNowOnClick = () => {
+    if(!principal.data) {
+        alert("로그인 후 사용해주세요.")
+        navigate("/auth/signin")
+    } else {
+        if(selectedProducts.length === 0) {
+            alert("상품을 선택해주세요.")
+        } else {
+            localStorage.setItem("orderData", JSON.stringify(selectedProducts));
+            localStorage.setItem("isCart", false);
+            navigate("/order")
+        }
+    }
+}
+
+const selectOnChange = (option) => {
+    const productDtl = product.productDtlList.filter(pdt => pdt.productDtlId === option.value)[0];
+
+    if(productDtl.tempStock <= 0) {
+        alert("해당 상품은 품절입니다.");
+        return;
+    }
+
+    if(selectedProducts.filter(selectedProduct => selectedProduct.productDtlId === productDtl.productDtlId).length > 0){
+        alert("해당 상품은 이미 선택된 상품 입니다.");
+        return;
+    }
+
+    const newSelectedProduct = {
+        productDtlId: productDtl.productDtlId,
+        sizeName: productDtl.size.sizeName,
+        price: productDtl.price,
+        count: 1,
+        productDtl: {
+            price: productDtl.price,
+            size: {
+                sizeId: productDtl.size.sizeId,
+                sizeName: productDtl.size.sizeName
+            },
+            productMst: {
+                productName: product.productName,
+                productThumbnailUrl: product.productThumbnailUrl
+            }
+        },
+    }
+    setSelectedProducts([...selectedProducts, newSelectedProduct]);
+}
+
+const countOnChange = (target, index) => {
+    const pdt = product.productDtlList.filter(pdt => pdt.productDtlId === selectedProducts[index].productDtlId)[0]; 
+    const updateSelectedPorudcts = [...selectedProducts];
+    updateSelectedPorudcts[index].count = parseInt(target.value);
+    updateSelectedPorudcts[index].price = pdt.price * parseInt(target.value);
+
+    if(updateSelectedPorudcts[index].count > pdt.tempStock) {
+        alert("현재 재고 보다 많이 선택되었습니다.")
+        target.value = pdt.tempStock;
+        return
+    }
+
+    setSelectedProducts([...updateSelectedPorudcts]);
+}
+```
+- 정상적인 동작이 아닐 경우의 동작 처리<br>ex) 비로그인 구매, 상품 미선택 구매, 품절 상품 구매, 재고보다 많은 수량 구매
+
+<br>
 
   </div>
   </details>
