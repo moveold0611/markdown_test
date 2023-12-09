@@ -75,8 +75,11 @@ const getProductsPagenation = useQuery(["getProductsPageNation"], async () => {
 })
 ```
 - 랜더링 시 요청에 검색 객체를 담아서 조건에 일치하는 상품 정보와 pagenation에 필요한 데이터를 받아온다.<br>그리고 페이지 변경 시 다른 검색 조건들과 충돌을 방지하기 위해 기존 검색 조건을 oldSearchData에 저장해 둔다.
+- 
 <br>
+
 ### 화면 출력 코드
+
 ```javascript
 return (
   <RootContainer>
@@ -146,6 +149,7 @@ return (
   <div markdown="1">
     
 ## Back-End 코드
+
 **Controller**
 ```java
 @GetMapping("api/products/minmax")
