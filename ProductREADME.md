@@ -241,6 +241,7 @@ public int getCountOfSearchedProducts(SearchMasterProductReqDto searchMasterProd
     }
 }
 ```
+- 상품 정보를 가져오면서 문자열로 나눠진 데이터 형태를 substring을 활용하여 key, value 형태로 분류하여 응답한다.
 
 <br>
 
