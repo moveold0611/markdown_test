@@ -618,6 +618,70 @@ const countOnChange = (target, index) => {
     
 ## Back-End 코드
 **Controller**
+```java
+@GetMapping("/api/product/master/{productMstId}")
+public ResponseEntity<?> getProductByProductMstId(@PathVariable int productMstId) {
+    return ResponseEntity.ok().body(productService.getProductByProductMstId(productMstId));
+}
+```
+
+<br>
+
+**Service**
+```java
+public GetProductRespDto getProductByProductMstId(int productMstId) {
+    try {
+        return productMapper.selectProductByProductMstId(productMstId).toProductRespDto();
+    }catch (Exception e) {
+        throw new ProductException(errorMapper.errorMapper
+                ("상품 오류", "상품 정보 조회 중 오류가 발생하였습니다."));
+    }
+}
+```
+
+<br>
+
+**Repository**
+```java
+public ProductMst selectProductByProductMstId(int productMstId);
+```
+
+<br>
+
+**Mybatis Query**
+```java
+    <select id="selectProductByProductMstId" resultMap="productMstMap">
+        select
+            pdt.product_dtl_id,
+            pmt.product_mst_id,
+            pmt.product_name,
+            pdt.price,
+            ptt.pet_type_id,
+            ptt.pet_type_name,
+            pct.product_category_id,
+            pct.product_category_name,
+            st.size_id,
+            st.size_name,
+            pmt.product_detail_text,
+            pmt.product_thumbnail_url,
+            pmt.product_detail_url,
+            psv.actual_stock,
+            psv.temp_stock,
+            pmt.create_date
+        from
+            product_mst_tb pmt
+            left outer join  product_dtl_tb pdt on(pdt.product_mst_id = pmt.product_mst_id)
+            left outer join product_category_tb pct on(pct.product_category_id = pmt.product_category_id)
+            left outer join pet_type_tb ptt on(ptt.pet_type_id = pmt.pet_type_id)
+            left outer join size_tb st on(st.size_id = pdt.size_id)
+            left outer join product_stock_view psv on(psv.product_dtl_id = pdt.product_dtl_id)
+        where
+            pmt.product_mst_id = #{productMstId}
+    </select>
+```
+
+<br>
+
   </div>
   </details>
   
