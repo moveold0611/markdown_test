@@ -354,11 +354,130 @@ public Integer addProductDetail(Map<String, Object> map);
   <summary>객체</summary>
   <div markdown="1">
    
-**Dto**
+**RequestDto**
 ```java
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class SearchMasterProductReqDto {
+    private String petTypeName;
+    private String productCategoryName;
+    private String searchOption;
+    private String searchValue;
+    private String sortOption;
+    private int pageIndex;
 ```
    <br>
+
+
+**Vo**
+```java
+@Data
+@Builder
+public class SearchMasterProductVo {
+    private String petTypeName;
+    private String productCategoryName;
+    private String searchOption;
+    private String searchValue;
+    private String sortOption;
+    private int pageIndex;
+    private int limit;
+}
+```
+- limit에 동적값을 할당하기 위한 vo
+
+<br>
+
+```java
+@Data
+public class GetProductVo {
+    private int productMstId;
+    private String productName;
+    private String productDetailText;
+    private String productThumbnailUrl;
+    private String productDetailUrl;
+    private int petTypeId;
+    private String petTypeName;
+    private int productCategoryId;
+    private String productCategoryName;
+    private LocalDateTime createDate;
+    private String sizeAndPrice;
+
+    public SearchMasterProductRespDto toRespDto(Map<String, Object> map) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String text = "";
+        if(productDetailText != null) {
+            text = productDetailText.replaceAll("\n", "<br>");
+        }
+
+        String[] sizes = {"no", "XS", "S", "M", "L", "XL", "XXL"};
+
+        for (int i = 0; i < sizes.length; i++) {
+            if(map.get(sizes[i]) == null) {
+                map.put(sizes[i], "");
+            }
+        }
+
+
+        SearchMasterProductRespDto body = SearchMasterProductRespDto.builder()
+                .productMstId(productMstId)
+                .productName(productName)
+                .productDetailText(text)
+                .productThumbnailUrl(productThumbnailUrl)
+                .productDetailUrl(productDetailUrl)
+                .petTypeId(petTypeId)
+                .petTypeName(petTypeName)
+                .productCategoryId(productCategoryId)
+                .productCategoryName(productCategoryName)
+                .createDate(createDate.format(formatter))
+                .no((String) map.get("no"))
+                .XS((String) map.get("XS"))
+                .S((String) map.get("S"))
+                .M((String) map.get("M"))
+                .L((String) map.get("L"))
+                .XL((String) map.get("XL"))
+                .XXL((String) map.get("XXL"))
+                .build();
+        return body;
+    }
+```
+- Service에서 가공한 사이즈별 가격을 __문자열__ 형태로 응답한다.
+- 문자열이 비어있을 시 해당 사이즈는 상품에 없는 사이즈다.<br> 이것으로 front-end에서 사이즈 유무를 판별한다.
+
+<br>
+
+**ResponseDto**
+```java
+@Builder
+@Data
+public class SearchMasterProductRespDto {
+    private int productMstId;
+    private String productName;
+    private int petTypeId;
+    private String petTypeName;
+    private int productCategoryId;
+    private String productCategoryName;
+    private String productDetailText;
+    private String productThumbnailUrl;
+    private String productDetailUrl;
+    private String createDate;
+    private String no;
+    @JsonProperty("XS")
+    private String XS;
+    @JsonProperty("S")
+    private String S;
+    @JsonProperty("M")
+    private String M;
+    @JsonProperty("L")
+    private String L;
+    @JsonProperty("XL")
+    private String XL;
+    @JsonProperty("XXL")
+    private String XXL;
+}
+```
+   <br>
+
    
   </div>
   </details>
