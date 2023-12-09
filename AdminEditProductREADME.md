@@ -306,7 +306,8 @@ public boolean addProduct(AddProductReqDto addProductReqDto) {
 ```
 - 상품의 카테고리 조건에 맞춰 자동으로 사이즈를 정해서 업로드하는 조건문이 들어있다.<br>사이즈 종류가 변경될 일이 없다고 판단되어 이와같이 코드를 작성하였다.
 - 변경이 필요하다면 front-end에서 List로 사이즈와 가격정보를 받아오는 방식으로 수정이 가능하다.
-   <br>
+
+<br>
 
 **Repository**
 ```java
