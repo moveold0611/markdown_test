@@ -25,6 +25,18 @@
     
 ## Front-End 코드
 
+```javascript
+const [ searchData, setSearchData ] = useState({
+    petTypeName: type,
+    productCategoryName: !!category ? category : 'all',
+    searchOption: "all",
+    searchValue: "",
+    sortOption: "name",
+    pageIndex: 1
+});
+```
+
+
   </div>
   </details>
   
