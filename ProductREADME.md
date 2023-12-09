@@ -25,6 +25,7 @@
     
 ## Front-End 코드
 
+* 요청 코드
 ```javascript
 const [ oldSearchData, setOldSearchData ] = useState({
     petTypeName: type,
@@ -88,6 +89,7 @@ const getProductsPagenation = useQuery(["getProductsPageNation"], async () => {
 
 <br>
 
+* 화면 출력 코드
 ```javascript
 return (
   <RootContainer>
