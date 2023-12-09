@@ -49,3 +49,10 @@ _강조2_
 __굵음2__
 ~~취소선~~
 
+***
+
+# 이미지
+
+![Alt text](C:/imgs/test_img.gif)
+![Alt text](C:/imgs/test_img.gif "Optional title")
+
