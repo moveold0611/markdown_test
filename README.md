@@ -38,3 +38,14 @@ markdown_test_sub_title
 Link: [Google][googlelink]
 
 [googlelink]: https://google.com "Go google"
+
+***
+
+# 강조
+
+*강조*
+_강조2_
+**굵음**
+__굵음2__
+~~취소선~~
+
