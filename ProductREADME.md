@@ -19,11 +19,17 @@
 
 **Controller**
 ```java
+@GetMapping("api/products/minmax")
 public ResponseEntity<?> searchProductsWithMinPriceAndMaxPrice(SearchMasterProductReqDto searchMasterProductReqDto) {
     return ResponseEntity.ok().body(productService.searchProductsWithMinPriceAndMaxPrice(searchMasterProductReqDto));
 }
+
+@GetMapping("api/products/count")
+public ResponseEntity<?> getCountOfSearchedProducts(SearchMasterProductReqDto searchMasterProductReqDto) {
+    return ResponseEntity.ok().body(productService.getCountOfSearchedProducts(searchMasterProductReqDto));
+}
 ```
-* 해당 컨트롤러로 상품 목록을 List로 받아온다.
+
 
   </div>
   </details>
