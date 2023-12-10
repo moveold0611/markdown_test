@@ -883,11 +883,10 @@ public Integer deleteProduct(int productMstId);
 ```
 - 다수의 사이즈를 하나의 객체에 담아오기 위해 GROUP_CONCAT을 사용하여 "(key/ value), (key/ value)"형태의 문자열로 select 하였다. <br>해당 문자열은 Service에서 가공하여 일반적인 Body형태로 변환하여 응답한다.
 
-   <br>
 
   </div>
   </details>
-<br/>
+
 
 
 
@@ -1263,11 +1262,10 @@ public Integer updateProductDtl(int productMstId, int sizeId, int price);
         and size_id = #{sizeId}
 </update>
 ```
-   <br>
 
   </div>
   </details>
-<br/>
+
 
 
 
