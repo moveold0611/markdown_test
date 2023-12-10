@@ -3,8 +3,6 @@
 
 ***
 
-관리자 상품 추가 페이지
----------------------------------
 
   <details>
   <summary>관리자 상품 추가 페이지</summary>
@@ -340,12 +338,14 @@ public Integer addProductDetail(Map<String, Object> map);
 
 ***
 
-관리자 상품 관리 목록 페이지
-----------------------------
+
+
 
   <details>
-  <summary>객체</summary>
+  <summary>관리자 상품 관리 목록 페이지</summary>
   <div markdown="1">
+
+## 객체
    
 **RequestDto**
 ```java
@@ -473,15 +473,7 @@ public class SearchMasterProductRespDto {
    <br>
 
    
-  </div>
-  </details>
-<br/>
-
-
-
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
+## Front-End
    
 **요청 코드**
 ```javascript
@@ -702,14 +694,7 @@ const handleRemoveProductClick = async (productMstId) => {
   <br>
 
    
-  </div>
-  </details>
-<br/>
-
-
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
+## Back-End
 
 **Controller**
 ```java
@@ -907,12 +892,12 @@ public Integer deleteProduct(int productMstId);
 ***
 
 
-관리자 상품 수정 페이지
------------------------
 
   <details>
-  <summary>객체</summary>
+  <summary>관리자 상품 수정 페이지</summary>
   <div markdown="1">
+
+  ## 객체
 
    ### 정보를 받아오는 객체는 관리자 상품 관리 목록 페이지와 동일하게 사용한다.
 
@@ -950,15 +935,7 @@ public class EditProductReqDto {
 
    <br>
 
-  </div>
-  </details>
-<br/>
-
-
-
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
+## Front-End
    
 **요청 코드**
 ```javascript
@@ -1197,14 +1174,7 @@ const handleUpdateSubmit = async () => {
 
 <br>
    
-  </div>
-  </details>
-<br/>
-
-
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
+## Back-End
 
 **Controller**
 ```java
@@ -1303,12 +1273,12 @@ public Integer updateProductDtl(int productMstId, int sizeId, int price);
 ***
 
 
-관리자 상품 상세 정보 조회 페이지
----------------------------------
 
   <details>
-  <summary>객체</summary>
+  <summary>관리자 상품 상세 정보 조회 페이지</summary>
   <div markdown="1">
+
+## 객체
    
 **ResponseDto**
 ```java
@@ -1372,15 +1342,7 @@ public class Size {
 
    <br>
    
-  </div>
-  </details>
-<br/>
-
-
-
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
+## Front-End
    
 **요청 코드**
 ```javascript
@@ -1504,14 +1466,7 @@ return (
 
 <br>
    
-  </div>
-  </details>
-<br/>
-
-
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
+## Back-End
 
 **Controller**
 ```java
