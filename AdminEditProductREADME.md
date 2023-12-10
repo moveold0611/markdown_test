@@ -7,8 +7,10 @@
 ---------------------------------
 
   <details>
-  <summary>객체</summary>
+  <summary>관리자 상품 추가 페이지</summary>
   <div markdown="1">
+
+## 객체
    
 **RequestDto**
 ```java
@@ -24,14 +26,9 @@ public class AddProductReqDto {
 }
 ```
    <br>
-   
-  </div>
-  </details>
-<br/>
 
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
+
+ ## Front-End
    
 **요청 코드**
 ```javascript
@@ -260,15 +257,10 @@ return (
 
 <br>
    
-  </div>
-  </details>
-<br/>
 
 
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
-
+## Back-End
+    
 **Controller**
 ```java
 @PostMapping("/api/admin/product")
