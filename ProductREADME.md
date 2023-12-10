@@ -1,15 +1,14 @@
 상품 페이지 코드 리뷰
 ==================
 ***    
-상품 목록 페이지
----------------
+
   <details>
-  <summary>객체</summary>
+  <summary>상품 목록 페이지 코드 리뷰</summary>
   <div markdown="1">
     
-## Dto
+## 객체
 
-### 검색 요청 RequestDto
+**검색 요청 RequestDto**
 ```java
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +26,7 @@ public class SearchMasterProductReqDto {
 
 <br>
 
-### 상품 데이터 ResponseDto
+**상품 데이터 ResponseDto**
 ```java
 @Data
 @Builder
@@ -46,16 +45,10 @@ public class GetAllProductsRespDto {
 
 <br>
 
-  </div>
-  </details>
-  
-<br/>
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
 
-## Front-End 코드
-### 요청 코드
+## Front-End
+
+**요청 코드**
 ```javascript
 const [ oldSearchData, setOldSearchData ] = useState({
     petTypeName: type,
@@ -116,7 +109,9 @@ const getProductsPagenation = useQuery(["getProductsPageNation"], async () => {
 
 <br>
 
-### 화면 출력 코드
+
+
+**화면 출력 코드**
 
 ```javascript
 return (
@@ -180,15 +175,9 @@ return (
 - 검색 옵션을 변경하는 부분은 각 기능별로 onChange를 사용하여 searchData를 변경한다.
 - back-end에서 응답받은 데이터를 map을 사용하여 화면에 출력한다.
 
-  </div>
-  </details>
-  
-<br/>
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
+
     
-## Back-End 코드
+## Back-End 
 
 **Controller**
 ```java
@@ -373,24 +362,20 @@ public Integer selectCountOfSearchedProducts(SearchMasterProductVo searchMasterP
 
 - 검색 조건에 일치하는 상품의 갯수도 pagenation기능을 위해 응답한다.
 
-<br>
   </div>
   </details>
   
-<br/>
 
-***    
 
-구매 확인 페이지
----------------
+
 
   <details>
-  <summary>객체</summary>
+  <summary>상품 상세 내용 페이지 코드 리뷰</summary>
   <div markdown="1">
     
-## Dto
+## 객체
 
-## ResponseDto
+**ResponseDto**
 ```java
 @Data
 @Builder
@@ -410,18 +395,11 @@ public class GetProductRespDto {
 ```
 - 상품에 대한 이름, 설명, 사진 등은 상위 객체에 담겨있고, 각 사이즈별 가격과 재고는 productDtlList에 담아서 응답
 
-<br>
-  </div>
-  </details>
-  
-<br/>
-  <details>
-  <summary>Front-End</summary>
-  <div markdown="1">
 
-## Front-End 코드
 
-### 요청 전송
+## Front-End
+
+**요청 전송**
 ```javascript
 const { productId } = useParams();
 
@@ -463,7 +441,7 @@ const getReviewByProduct = useQuery(["getReviewByProduct"], async () => {
 
 <br>
 
-### 화면 출력
+**화면 출력**
 ```javascript
 return (
     <RootContainer>
@@ -547,7 +525,7 @@ return (
 
 <br>
 
-### 예외 상황 처리
+**예외 상황 처리**
 ```javascript
 const buyNowOnClick = () => {
     if(!principal.data) {
@@ -616,15 +594,9 @@ const countOnChange = (target, index) => {
 
 <br>
 
-  </div>
-  </details>
-  
-<br/>
-  <details>
-  <summary>Back-End</summary>
-  <div markdown="1">
     
-## Back-End 코드
+## Back-End
+
 **Controller**
 ```java
 @GetMapping("/api/product/master/{productMstId}")
@@ -733,9 +705,7 @@ public ProductMst selectProductByProductMstId(int productMstId);
 ```
 - resultMap collection을 이용하여 productMst 객체 하위에 productDtl이 복수의 List로 응답 가능하도록 코드 작성
 
-<br>
-
   </div>
   </details>
   
-<br/>
+
