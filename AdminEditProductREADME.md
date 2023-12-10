@@ -21,6 +21,7 @@ public class AddProductReqDto {
     private String productDetailText;
     private String productThumbnailUrl;
     private String productDetailUrl;
+}
 ```
    <br>
    
@@ -366,6 +367,7 @@ public class SearchMasterProductReqDto {
     private String searchValue;
     private String sortOption;
     private int pageIndex;
+}
 ```
    <br>
 
